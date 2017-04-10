@@ -1,6 +1,6 @@
 package org.cendra.commons;
 
-import java.util.Locale;
+import org.cendra.commons.util.model.geo.populate.PopulateGeo;
 
 /**
  * Hello world!
@@ -12,10 +12,8 @@ public class App
     {
         System.out.println( "Hello World!" );
         
-        String[] s = Locale.getISOLanguages();
+        PopulateGeo populateGeo = new PopulateGeo();
         
-        for(String i : s){
-        	System.out.println(i);
-        }
+        populateGeo.populate();
     }
 }

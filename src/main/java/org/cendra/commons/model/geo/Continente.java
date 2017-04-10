@@ -1,53 +1,52 @@
 package org.cendra.commons.model.geo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+// https://en.wikipedia.org/wiki/Continent
+public class Continente {
 
-import org.cendra.commons.util.model.AbstractEntityErasableCoded;
-import org.cendra.commons.util.model.LocaleStringValue;
+	private String urlWikipedia;
+	private String urlWikipediaImage;
+	private Long geonameId;
+	private String codigo;
+	private String nombre;
 
-public class Continente extends AbstractEntityErasableCoded implements Serializable, Cloneable, Comparable<Continente> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4997445290007661114L;
-
-	private List<LocaleStringValue> nombres = new ArrayList<LocaleStringValue>();
-	private List<LocaleStringValue> descripciones = new ArrayList<LocaleStringValue>();
-
-	public List<LocaleStringValue> getNombres() {
-		return nombres;
-	}
-	
-	public List<LocaleStringValue> getNombres(ConfiguracionRegional configuracionRegional) {
-		return nombres;
+	public String getUrlWikipedia() {
+		return urlWikipedia;
 	}
 
-	public void setNombres(List<LocaleStringValue> nombres) {
-		this.nombres = nombres;
+	public void setUrlWikipedia(String urlWikipedia) {
+		this.urlWikipedia = urlWikipedia;
 	}
 
-	public boolean addNombre(LocaleStringValue e) {
-		return nombres.add(e);
+	public String getUrlWikipediaImage() {
+		return urlWikipediaImage;
 	}
 
-	public List<LocaleStringValue> getDescripciones() {
-		return descripciones;
+	public void setUrlWikipediaImage(String urlWikipediaImage) {
+		this.urlWikipediaImage = urlWikipediaImage;
 	}
 
-	public void setDescripciones(List<LocaleStringValue> descripciones) {
-		this.descripciones = descripciones;
+	public Long getGeonameId() {
+		return geonameId;
 	}
 
-	public boolean addDescripcion(LocaleStringValue e) {
-		return descripciones.add(e);
+	public void setGeonameId(Long geonameId) {
+		this.geonameId = geonameId;
 	}
 
-	public int compareTo(Continente o) {
+	public String getCodigo() {
+		return codigo;
+	}
 
-		return 0;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 }
