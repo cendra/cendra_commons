@@ -1,204 +1,73 @@
 package org.cendra.commons.util.model.geo.populate;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.cendra.commons.model.geo.Continente;
+import org.cendra.commons.util.model.geo.populate.geonames.ContinentCode;
+import org.cendra.commons.util.model.geo.populate.geonames.GeoNames;
+import org.cendra.commons.util.model.geo.populate.wikipedia.Wikipedia;
 
 public class PopulateGeo {
 
-	// AF : Africa geonameId=6255146
-	// AS : Asia geonameId=6255147
-	// EU : Europe geonameId=6255148
-	// NA : North America geonameId=6255149
-	// OC : Oceania geonameId=6255151
-	// SA : South America geonameId=6255150
-	// AN : Antarctica geonameId=6255152
+	private HttpUtil httpUtil;
+	private GeoNames geoNames;
+	private Wikipedia wikipedia;
 
-	public void populate() {
+	private String pathConfig = "/home/java/dev/sources/cendra_commons/config";
 
-		Continente continente = new Continente();
-		continente.setGeonameId(6255146L);
-		continente.setCodigo("AF");
-		continente.setNombre("Africa");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/Africa");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		continente = new Continente();
-		continente.setGeonameId(6255147L);
-		continente.setCodigo("AS");
-		continente.setNombre("Asia");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/Asia");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		continente = new Continente();
-		continente.setGeonameId(6255148L);
-		continente.setCodigo("EU");
-		continente.setNombre("Europe");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/Europe");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		
-		continente = new Continente();
-		continente.setGeonameId(6255149L);
-		continente.setCodigo("NA");
-		continente.setNombre("North America");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/North_America");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		continente = new Continente();
-		continente.setGeonameId(6255151L);
-		continente.setCodigo("OC");
-		continente.setNombre("Oceania");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/Australia");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		continente = new Continente();
-		continente.setGeonameId(6255150L);
-		continente.setCodigo("SA");
-		continente.setNombre("South America");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/South_America");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
-		
-		continente = new Continente();
-		continente.setGeonameId(6255152L);
-		continente.setCodigo("AN");
-		continente.setNombre("Antarctica");
-		continente.setUrlWikipedia("https://en.wikipedia.org/wiki/Antarctica");
-		continente.setUrlWikipediaImage(getUrlWikipediaImage(continente.getNombre()));
-		System.out.println(continente.getUrlWikipediaImage());
+	private String pathHome = "/home/java/Descargas";
+	private String pathHomeGeo = pathHome + File.separatorChar + "geo";
+	private String pathHomeGeoContinent = pathHomeGeo + File.separatorChar + "continente";
+	private String pathHomeGeoNames = pathHomeGeo + File.separatorChar + "geonames";
+//	private String pathAlternateNamesFile;
+
+//	private List<Long> geonameIds = new ArrayList<Long>();
+
+	private List<Continente> continentes = new ArrayList<Continente>();
+
+	public void populate() throws FileNotFoundException, IOException {
+
+		httpUtil = new HttpUtil(pathConfig);
+		geoNames = new GeoNames(httpUtil);
+		wikipedia = new Wikipedia(httpUtil);
+//		geonameIds = new ArrayList<Long>();
+
+		buildFolders();
+		populateContinente();
 
 	}
 
-	private String getUrlWikipediaImage(String nombre) {
-
-		String s = this.getFile("https://en.wikipedia.org/wiki/File:" + nombre + "_(orthographic_projection).svg");
-
-		if (s == null) {
-			return null;
-		}
-
-		String key = "id=\"file\"";
-
-		if (s.contains(key) == false) {
-			return null;
-		}
-
-		s = s.split(key)[1];
-
-		key = "href=\"";
-
-		if (s.contains(key) == false) {
-			return null;
-		}
-
-		s = s.split(key)[1];
-
-		key = "\"";
-
-		if (s.contains(key) == false) {
-			return null;
-		}
-
-		s = s.split(key)[0];
-
-		return "https:" + s;
-
+	private void buildFolders() {
+		new File(pathHomeGeo).mkdirs();
+		new File(pathHomeGeoContinent).mkdirs();
+		new File(pathHomeGeoNames).mkdirs();
 	}
 
-	private void download(String uri, String toPathFile) {
-		try {
-			// Url con la foto
-			URL url = new URL(uri);
+	private void populateContinente() throws IOException {
 
-			// establecemos conexion
-			URLConnection urlCon = url.openConnection();
+		List<ContinentCode> continentsCodes = geoNames.getContinentsCodes();
 
-			// Sacamos por pantalla el tipo de fichero
-			System.out.println(urlCon.getContentType());
+		for (ContinentCode continentCode : continentsCodes) {
 
-			// Se obtiene el inputStream de la foto web y se abre el fichero
-			// local.
-			InputStream is = urlCon.getInputStream();
-			FileOutputStream fos = new FileOutputStream(toPathFile);
+			Continente continente = new Continente();
 
-			// Lectura de la foto de la web y escritura en fichero local
-			byte[] array = new byte[1000]; // buffer temporal de lectura.
-			int leido = is.read(array);
-			while (leido > 0) {
-				fos.write(array, 0, leido);
-				leido = is.read(array);
-			}
+			continente.setId(continentCode.getCode());
+			continente.setNombre(continentCode.getName());
+			continente.setGeonameId(Long.valueOf(continentCode.getGeonameId()));
+			continente.setUrlWikipedia(wikipedia.getUrlWikipedia(continente.getId()));
+			continente.setUrlWikipediaProyeccionOrtografica(
+					wikipedia.getUrlWikipediaProyeccionOrtografica(continente.getNombre()));
+			String fileName = httpUtil.download(continente.getUrlWikipediaProyeccionOrtografica(),
+					pathHomeGeoContinent + File.separatorChar + continente.getId() + "_orthographic_projection");
+			continente.setUrlProyeccionOrtografica(fileName);
 
-			// cierre de conexion y fichero.
-			is.close();
-			fos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private String getFile(String path) {
-		try {
-
-			URL url = new URL(path);
-			URLConnection urlc = url.openConnection();
-
-			BufferedInputStream buffer = new BufferedInputStream(urlc.getInputStream());
-
-			StringBuilder builder = new StringBuilder();
-			int byteRead;
-			while ((byteRead = buffer.read()) != -1)
-				builder.append((char) byteRead);
-
-			buffer.close();
-
-			return builder.toString();
-
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
+			continentes.add(continente);
 		}
 
-		return null;
-	}
-	
-	private boolean ifExists(String path) {
-		try {
-
-			URL url = new URL(path);
-			URLConnection urlc = url.openConnection();
-
-			BufferedInputStream buffer = new BufferedInputStream(urlc.getInputStream());
-
-			StringBuilder builder = new StringBuilder();
-			int byteRead;
-			while ((byteRead = buffer.read()) != -1)
-				builder.append((char) byteRead);
-
-			buffer.close();
-
-			return builder.toString().length() > 0;
-
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		return false;
 	}
 
 }

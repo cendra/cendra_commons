@@ -1,13 +1,31 @@
 package org.cendra.commons.model.geo;
 
-// https://en.wikipedia.org/wiki/Continent
 public class Continente {
 
-	private String urlWikipedia;
-	private String urlWikipediaImage;
-	private Long geonameId;
-	private String codigo;
+	private String id;
 	private String nombre;
+
+	private String urlWikipedia;
+	private String urlWikipediaProyeccionOrtografica;
+	private String urlProyeccionOrtografica;
+
+	private Long geonameId;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
 	public String getUrlWikipedia() {
 		return urlWikipedia;
@@ -17,12 +35,20 @@ public class Continente {
 		this.urlWikipedia = urlWikipedia;
 	}
 
-	public String getUrlWikipediaImage() {
-		return urlWikipediaImage;
+	public String getUrlWikipediaProyeccionOrtografica() {
+		return urlWikipediaProyeccionOrtografica;
 	}
 
-	public void setUrlWikipediaImage(String urlWikipediaImage) {
-		this.urlWikipediaImage = urlWikipediaImage;
+	public void setUrlWikipediaProyeccionOrtografica(String urlWikipediaProyeccionOrtografica) {
+		this.urlWikipediaProyeccionOrtografica = urlWikipediaProyeccionOrtografica;
+	}
+
+	public String getUrlProyeccionOrtografica() {
+		return urlProyeccionOrtografica;
+	}
+
+	public void setUrlProyeccionOrtografica(String urlProyeccionOrtografica) {
+		this.urlProyeccionOrtografica = urlProyeccionOrtografica;
 	}
 
 	public Long getGeonameId() {
@@ -31,22 +57,6 @@ public class Continente {
 
 	public void setGeonameId(Long geonameId) {
 		this.geonameId = geonameId;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 }

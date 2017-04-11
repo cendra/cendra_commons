@@ -1,5 +1,8 @@
 package org.cendra.commons;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.cendra.commons.util.model.geo.populate.PopulateGeo;
 
 /**
@@ -14,6 +17,14 @@ public class App
         
         PopulateGeo populateGeo = new PopulateGeo();
         
-        populateGeo.populate();
+        try {
+			populateGeo.populate();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
