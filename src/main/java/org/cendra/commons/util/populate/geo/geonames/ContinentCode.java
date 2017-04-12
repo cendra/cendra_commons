@@ -1,4 +1,4 @@
-package org.cendra.commons.util.model.geo.populate.geonames;
+package org.cendra.commons.util.populate.geo.geonames;
 
 public class ContinentCode {
 

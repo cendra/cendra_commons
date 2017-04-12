@@ -1,4 +1,4 @@
-package org.cendra.commons.util.model.geo.populate;
+package org.cendra.commons.util.populate.geo;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -45,66 +45,55 @@ public class HttpUtil {
 
 	}
 
-	public String download(String uri, String toPathFile) {
-		try {
-			// Url con la foto
-			URL url = new URL(uri);
+	public String download(String uri, String toPathFile) throws IOException {
 
-			// establecemos conexion
-			URLConnection urlCon = url.openConnection();
+		// Url con la foto
+		URL url = new URL(uri);
 
-			// Sacamos por pantalla el tipo de fichero
-			System.out.println(urlCon.getContentType());
+		// establecemos conexion
+		URLConnection urlCon = url.openConnection();
 
-			toPathFile += "." + mimeTypes2.getProperty(urlCon.getContentType());
+		// Sacamos por pantalla el tipo de fichero
+		System.out.println(urlCon.getContentType());
 
-			// Se obtiene el inputStream de la foto web y se abre el fichero
-			// local.
-			InputStream is = urlCon.getInputStream();
-			FileOutputStream fos = new FileOutputStream(toPathFile);
+		toPathFile += "." + mimeTypes2.getProperty(urlCon.getContentType());
 
-			// Lectura de la foto de la web y escritura en fichero local
-			byte[] array = new byte[1000]; // buffer temporal de lectura.
-			int leido = is.read(array);
-			while (leido > 0) {
-				fos.write(array, 0, leido);
-				leido = is.read(array);
-			}
+		// Se obtiene el inputStream de la foto web y se abre el fichero
+		// local.
+		InputStream is = urlCon.getInputStream();
+		FileOutputStream fos = new FileOutputStream(toPathFile);
 
-			// cierre de conexion y fichero.
-			is.close();
-			fos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		// Lectura de la foto de la web y escritura en fichero local
+		byte[] array = new byte[1000]; // buffer temporal de lectura.
+		int leido = is.read(array);
+		while (leido > 0) {
+			fos.write(array, 0, leido);
+			leido = is.read(array);
 		}
+
+		// cierre de conexion y fichero.
+		is.close();
+		fos.close();
 
 		return toPathFile;
 	}
 
-	public String getFile(String path) {
-		try {
+	public String getFile(String path) throws IOException {
 
-			URL url = new URL(path);
-			URLConnection urlc = url.openConnection();
+		URL url = new URL(path);
+		URLConnection urlc = url.openConnection();
 
-			BufferedInputStream buffer = new BufferedInputStream(urlc.getInputStream());
+		BufferedInputStream buffer = new BufferedInputStream(urlc.getInputStream());
 
-			StringBuilder builder = new StringBuilder();
-			int byteRead;
-			while ((byteRead = buffer.read()) != -1)
-				builder.append((char) byteRead);
+		StringBuilder builder = new StringBuilder();
+		int byteRead;
+		while ((byteRead = buffer.read()) != -1)
+			builder.append((char) byteRead);
 
-			buffer.close();
+		buffer.close();
 
-			return builder.toString();
+		return builder.toString();
 
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		return null;
 	}
 
 	public boolean ifExists(String path) {
@@ -125,12 +114,11 @@ public class HttpUtil {
 			return builder.toString().length() > 0;
 
 		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
+			return false;
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			return false;
 		}
 
-		return false;
 	}
 
 }

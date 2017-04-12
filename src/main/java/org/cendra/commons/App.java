@@ -3,7 +3,7 @@ package org.cendra.commons;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.cendra.commons.util.model.geo.populate.PopulateGeo;
+import org.cendra.commons.util.populate.geo.PopulateGeo;
 
 /**
  * Hello world!

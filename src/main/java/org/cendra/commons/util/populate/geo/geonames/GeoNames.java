@@ -1,4 +1,4 @@
-package org.cendra.commons.util.model.geo.populate.geonames;
+package org.cendra.commons.util.populate.geo.geonames;
 
 import java.io.File;
 import java.io.FileReader;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipException;
 
-import org.cendra.commons.util.model.geo.populate.HttpUtil;
+import org.cendra.commons.util.populate.geo.HttpUtil;
 import org.cendra.commons.util.zip.UtilZip;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -79,47 +79,69 @@ public class GeoNames {
 
 	}
 
-	public List<CountryInfo> getCountrysInfo(String pathHomeGeoNames) throws IOException {
+	public List<CountryInfo> getCountrysInfo(String pathGeoNames) throws IOException {
 
 		String uri = "http://download.geonames.org/export/dump/countryInfo.txt";
-		String fileName = httpUtil.download(uri, pathHomeGeoNames);
+		String filePath = httpUtil.download(uri, pathGeoNames + File.separatorChar + "countryInfo");
 
 		List<CountryInfo> countrysInfos = new ArrayList<CountryInfo>();
 
-		CSVReader reader = new CSVReader(new FileReader(pathHomeGeoNames + File.separatorChar + fileName), '\t');
+		CSVReader reader = new CSVReader(new FileReader(filePath), '\t');
 
 		String[] nextLine;
 		while ((nextLine = reader.readNext()) != null) {
 
-			CountryInfo countryInfo = new CountryInfo();
-			countryInfo.setiSO(nextLine[0]);
-			countryInfo.setiSO3(nextLine[1]);
-			countryInfo.setiSONumeric(nextLine[2]);
-			countryInfo.setFips(nextLine[3]);
-			countryInfo.setCapital(nextLine[4]);
-			countryInfo.setArea(nextLine[5]);
-			countryInfo.setPopulation(nextLine[6]);
-			countryInfo.setContinent(nextLine[7]);
-			countryInfo.setTld(nextLine[8]);
-			countryInfo.setCurrencyCode(nextLine[9]);
-			countryInfo.setCurrencyName(nextLine[10]);
-			countryInfo.setPhone(nextLine[11]);
-			countryInfo.setPostalCodeFormat(nextLine[12]);
-			countryInfo.setPostalCodeRegex(nextLine[13]);
-			countryInfo.setLanguages(nextLine[14]);
-			countryInfo.setGeonameid(nextLine[15]);
-			countryInfo.setNeighbours(nextLine[16]);
-			countryInfo.setEquivalentFipsCode(nextLine[17]);
+			if (nextLine[0].startsWith("#") == false) {
+				CountryInfo countryInfo = new CountryInfo();
+				countryInfo.setiSO(nextLine[0]);
+				countryInfo.setiSO3(nextLine[1]);
+				countryInfo.setiSONumeric(nextLine[2]);
+				countryInfo.setFips(nextLine[3]);
+				countryInfo.setCountry(nextLine[4]);
+				countryInfo.setCapital(nextLine[5]);
+				countryInfo.setArea(nextLine[6]);
+				countryInfo.setPopulation(nextLine[7]);
+				countryInfo.setContinent(nextLine[8]);
+				countryInfo.setTld(nextLine[9]);
+				countryInfo.setCurrencyCode(nextLine[10]);
+				countryInfo.setCurrencyName(nextLine[11]);
+				countryInfo.setPhone(nextLine[12]);
+				countryInfo.setPostalCodeFormat(nextLine[13]);
+				countryInfo.setPostalCodeRegex(nextLine[14]);
+				countryInfo.setLanguages(nextLine[15]);
+				countryInfo.setGeonameid(nextLine[16]);
+				countryInfo.setNeighbours(nextLine[17]);
+				countryInfo.setEquivalentFipsCode(nextLine[18]);
 
-			countrysInfos.add(countryInfo);
+				countrysInfos.add(countryInfo);
+			}
 
 		}
 
 		return countrysInfos;
+	}
+
+	public String getUrlGeoNames(String id, String nombre) {
+		return "http://www.geonames.org/countries/" + id + "/" + nombre.replace(" ", "-") + ".html";
+	}
+
+	public String getUrlMapa(String id) {
+		
+		if("CW".equalsIgnoreCase(id)){
+			id = "CK";
+		}
+
+		return "http://www.geonames.org/img/country/250/" + id + ".png";
 
 	}
 
-	public List<AlternateName> downloadAlternateNames(String pathHomeGeoNames, String pathAlternateNamesFile,
+	public String getUrlBanderaA(String id) {
+
+		return "http://www.geonames.org/flags/x/" + id.toLowerCase() + ".gif";
+
+	}
+
+	private List<AlternateName> downloadAlternateNames(String pathHomeGeoNames, String pathAlternateNamesFile,
 			List<Long> geonameIds) throws ZipException, IOException {
 		String alternateNamestxt = "alternateNames.txt";
 

@@ -1,4 +1,4 @@
-package org.cendra.commons.util.model.geo.populate.geonames;
+package org.cendra.commons.util.populate.geo.geonames;
 
 public class CountryInfo {
 
@@ -6,6 +6,7 @@ public class CountryInfo {
 	private String iSO3;
 	private String iSONumeric;
 	private String fips;
+	private String country;
 	private String capital;
 	private String area;
 	private String population;
@@ -26,7 +27,8 @@ public class CountryInfo {
 	}
 
 	public void setiSO(String iSO) {
-		this.iSO = iSO;
+
+		this.iSO = format(iSO);
 	}
 
 	public String getiSO3() {
@@ -34,7 +36,8 @@ public class CountryInfo {
 	}
 
 	public void setiSO3(String iSO3) {
-		this.iSO3 = iSO3;
+
+		this.iSO3 = format(iSO3);
 	}
 
 	public String getiSONumeric() {
@@ -42,7 +45,8 @@ public class CountryInfo {
 	}
 
 	public void setiSONumeric(String iSONumeric) {
-		this.iSONumeric = iSONumeric;
+
+		this.iSONumeric = format(iSONumeric);
 	}
 
 	public String getFips() {
@@ -50,7 +54,17 @@ public class CountryInfo {
 	}
 
 	public void setFips(String fips) {
-		this.fips = fips;
+
+		this.fips = format(fips);
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+
+		this.country = format(country);
 	}
 
 	public String getCapital() {
@@ -58,7 +72,8 @@ public class CountryInfo {
 	}
 
 	public void setCapital(String capital) {
-		this.capital = capital;
+
+		this.capital = format(capital);
 	}
 
 	public String getArea() {
@@ -66,7 +81,8 @@ public class CountryInfo {
 	}
 
 	public void setArea(String area) {
-		this.area = area;
+
+		this.area = format(area);
 	}
 
 	public String getPopulation() {
@@ -74,7 +90,8 @@ public class CountryInfo {
 	}
 
 	public void setPopulation(String population) {
-		this.population = population;
+
+		this.population = format(population);
 	}
 
 	public String getContinent() {
@@ -82,7 +99,8 @@ public class CountryInfo {
 	}
 
 	public void setContinent(String continent) {
-		this.continent = continent;
+
+		this.continent = format(continent);
 	}
 
 	public String getTld() {
@@ -90,7 +108,8 @@ public class CountryInfo {
 	}
 
 	public void setTld(String tld) {
-		this.tld = tld;
+
+		this.tld = format(tld);
 	}
 
 	public String getCurrencyCode() {
@@ -98,7 +117,8 @@ public class CountryInfo {
 	}
 
 	public void setCurrencyCode(String currencyCode) {
-		this.currencyCode = currencyCode;
+
+		this.currencyCode = format(currencyCode);
 	}
 
 	public String getCurrencyName() {
@@ -106,7 +126,9 @@ public class CountryInfo {
 	}
 
 	public void setCurrencyName(String currencyName) {
-		this.currencyName = currencyName;
+
+		this.currencyName = format(currencyName);
+		;
 	}
 
 	public String getPhone() {
@@ -114,7 +136,7 @@ public class CountryInfo {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = format(phone);
 	}
 
 	public String getPostalCodeFormat() {
@@ -122,7 +144,7 @@ public class CountryInfo {
 	}
 
 	public void setPostalCodeFormat(String postalCodeFormat) {
-		this.postalCodeFormat = postalCodeFormat;
+		this.postalCodeFormat = format(postalCodeFormat);
 	}
 
 	public String getPostalCodeRegex() {
@@ -130,7 +152,7 @@ public class CountryInfo {
 	}
 
 	public void setPostalCodeRegex(String postalCodeRegex) {
-		this.postalCodeRegex = postalCodeRegex;
+		this.postalCodeRegex = format(postalCodeRegex);
 	}
 
 	public String getLanguages() {
@@ -138,7 +160,7 @@ public class CountryInfo {
 	}
 
 	public void setLanguages(String languages) {
-		this.languages = languages;
+		this.languages = format(languages);
 	}
 
 	public String getGeonameid() {
@@ -146,7 +168,7 @@ public class CountryInfo {
 	}
 
 	public void setGeonameid(String geonameid) {
-		this.geonameid = geonameid;
+		this.geonameid = format(geonameid);
 	}
 
 	public String getNeighbours() {
@@ -154,7 +176,7 @@ public class CountryInfo {
 	}
 
 	public void setNeighbours(String neighbours) {
-		this.neighbours = neighbours;
+		this.neighbours = format(neighbours);
 	}
 
 	public String getEquivalentFipsCode() {
@@ -162,17 +184,25 @@ public class CountryInfo {
 	}
 
 	public void setEquivalentFipsCode(String equivalentFipsCode) {
-		this.equivalentFipsCode = equivalentFipsCode;
+		this.equivalentFipsCode = format(equivalentFipsCode);
 	}
 
 	@Override
 	public String toString() {
 		return "CountryInfo [iSO=" + iSO + ", iSO3=" + iSO3 + ", iSONumeric=" + iSONumeric + ", fips=" + fips
-				+ ", capital=" + capital + ", area=" + area + ", population=" + population + ", continent=" + continent
-				+ ", tld=" + tld + ", currencyCode=" + currencyCode + ", currencyName=" + currencyName + ", phone="
-				+ phone + ", postalCodeFormat=" + postalCodeFormat + ", postalCodeRegex=" + postalCodeRegex
-				+ ", languages=" + languages + ", geonameid=" + geonameid + ", neighbours=" + neighbours
-				+ ", equivalentFipsCode=" + equivalentFipsCode + "]";
+				+ ", country=" + country + ", capital=" + capital + ", area=" + area + ", population=" + population
+				+ ", continent=" + continent + ", tld=" + tld + ", currencyCode=" + currencyCode + ", currencyName="
+				+ currencyName + ", phone=" + phone + ", postalCodeFormat=" + postalCodeFormat + ", postalCodeRegex="
+				+ postalCodeRegex + ", languages=" + languages + ", geonameid=" + geonameid + ", neighbours="
+				+ neighbours + ", equivalentFipsCode=" + equivalentFipsCode + "]";
+	}
+
+	private String format(String v) {
+		if (v != null && v.isEmpty()) {
+			return null;
+		}
+
+		return v.trim();
 	}
 
 }

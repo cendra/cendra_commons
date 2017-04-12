@@ -5,11 +5,11 @@ public class Continente {
 	private String id;
 	private String nombre;
 
+	private Long geonameId;
 	private String urlWikipedia;
+	private String urlWikipediaDivisionPolitica;
 	private String urlWikipediaProyeccionOrtografica;
 	private String urlProyeccionOrtografica;
-
-	private Long geonameId;
 
 	public String getId() {
 		return id;
@@ -27,12 +27,28 @@ public class Continente {
 		this.nombre = nombre;
 	}
 
+	public Long getGeonameId() {
+		return geonameId;
+	}
+
+	public void setGeonameId(Long geonameId) {
+		this.geonameId = geonameId;
+	}
+
 	public String getUrlWikipedia() {
 		return urlWikipedia;
 	}
 
 	public void setUrlWikipedia(String urlWikipedia) {
 		this.urlWikipedia = urlWikipedia;
+	}
+
+	public String getUrlWikipediaDivisionPolitica() {
+		return urlWikipediaDivisionPolitica;
+	}
+
+	public void setUrlWikipediaDivisionPolitica(String urlWikipediaDivisionPolitica) {
+		this.urlWikipediaDivisionPolitica = urlWikipediaDivisionPolitica;
 	}
 
 	public String getUrlWikipediaProyeccionOrtografica() {
@@ -49,14 +65,6 @@ public class Continente {
 
 	public void setUrlProyeccionOrtografica(String urlProyeccionOrtografica) {
 		this.urlProyeccionOrtografica = urlProyeccionOrtografica;
-	}
-
-	public Long getGeonameId() {
-		return geonameId;
-	}
-
-	public void setGeonameId(Long geonameId) {
-		this.geonameId = geonameId;
 	}
 
 }
