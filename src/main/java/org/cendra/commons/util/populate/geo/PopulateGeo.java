@@ -52,9 +52,17 @@ public class PopulateGeo {
 		buildFolders();
 		// populateContinente();
 		populatePais();
-		
-		for(Log log : logs){
-			System.out.println(log);
+
+		for (Log log : logs) {
+			if (log.getType().equals(Log.TYPE_ERROR)) {
+				System.out.println(log);
+			}
+		}
+
+		for (Log log : logs) {
+			if (log.getType().equals(Log.TYPE_WARNING)) {
+				System.out.println(log);
+			}
 		}
 
 	}
@@ -75,16 +83,134 @@ public class PopulateGeo {
 
 			Continente continente = new Continente();
 
-			continente.setId(continentCode.getCode());
-			continente.setNombre(continentCode.getName());
-			continente.setGeonameId(Long.valueOf(continentCode.getGeonameId()));
-			continente.setUrlWikipedia(wikipedia.getUrlWikipedia(continente.getId()));
-			continente.setUrlWikipediaDivisionPolitica(wikipedia.getUrlWikipediaDivisionPolitica(continente.getId()));
-			continente.setUrlWikipediaProyeccionOrtografica(
-					wikipedia.getUrlWikipediaProyeccionOrtografica(continente.getNombre()));
-			String fileName = httpUtil.download(continente.getUrlWikipediaProyeccionOrtografica(),
-					pathContinente + File.separatorChar + continente.getId() + "_orthographic_projection");
-			continente.setUrlProyeccionOrtografica(fileName);
+			// --------------------------------------------------------------------------
+
+			if (continentCode.getCode() != null) {
+				continente.setId(continentCode.getCode());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("id");
+				log.setSubject("No se pudo cargar el atributo 'Id' para el contienete " + continente.getId());
+				log.setMsg("El atributo es nulo en countryInfo.");
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (continentCode.getName() != null) {
+				continente.setNombre(continentCode.getName());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("nombre");
+				log.setSubject("No se pudo cargar el atributo 'Nombre' para el contienete " + continente.getId());
+				log.setMsg("El atributo es nulo en countryInfo.");
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (continentCode.getGeonameId() != null) {
+
+				try {
+					continente.setGeonameId(Long.valueOf(continentCode.getGeonameId()));
+				} catch (Exception e) {
+					Log log = new Log();
+					log.setType(Log.TYPE_ERROR);
+					log.setId(continente.getId());
+					log.setClassName(continente.getClass().getSimpleName());
+					log.addAtt("geonameId");
+					log.setSubject(
+							"No se pudo cargar el atributo 'Geoname Id' para el contienete " + continente.getId());
+					log.setMsg("El atributo no es numérico en countryInfo.");
+
+					logs.add(log);
+				}
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("geonameId");
+				log.setSubject("No se pudo cargar el atributo 'Geoname Id' para el contienete " + continente.getId());
+				log.setMsg("El atributo es nulo en countryInfo.");
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (httpUtil.ifExists(wikipedia.getUrlWikipedia(continente.getId()))) {
+
+				continente.setUrlWikipedia(wikipedia.getUrlWikipedia(continente.getId()));
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("urlWikipedia");
+				log.setSubject(
+						"No se pudo cargar el atributo 'URL Wikipedia' para el continente " + continente.getId());
+				log.setMsg("URL: " + wikipedia.getUrlWikipedia(continente.getId()));
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (httpUtil.ifExists(wikipedia.getUrlWikipediaDivisionPolitica(continente.getId()))) {
+
+				continente
+						.setUrlWikipediaDivisionPolitica(wikipedia.getUrlWikipediaDivisionPolitica(continente.getId()));
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("urlWikipediaDivisionPolitica");
+				log.setSubject("No se pudo cargar el atributo 'URL Wikipedia Division Politica' para el continente "
+						+ continente.getId());
+				log.setMsg("URL: " + wikipedia.getUrlWikipediaDivisionPolitica(continente.getId()));
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (httpUtil.ifExists(wikipedia.getUrlWikipediaProyeccionOrtografica(continente.getNombre()))) {
+
+				continente.setUrlWikipediaProyeccionOrtografica(
+						wikipedia.getUrlWikipediaProyeccionOrtografica(continente.getNombre()));
+
+				String fileName = httpUtil.download(continente.getUrlWikipediaProyeccionOrtografica(),
+						pathContinente + File.separatorChar + continente.getId() + "_orthographic_projection");
+				continente.setUrlLocalProyeccionOrtografica(fileName);
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(continente.getId());
+				log.setClassName(continente.getClass().getSimpleName());
+				log.addAtt("urlLocalProyeccionOrtografica");
+				log.setSubject(
+						"No se pudo cargar el atributo 'URL Wikipedia Proyeccion Ortografica' para el continente "
+								+ continente.getId());
+				log.setMsg("URL: " + wikipedia.getUrlWikipediaProyeccionOrtografica(continente.getNombre()));
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
 
 			continentes.add(continente);
 		}
@@ -99,54 +225,248 @@ public class PopulateGeo {
 
 			Pais pais = new Pais();
 
+			// --------------------------------------------------------------------------
+
 			if (countryInfo.getContinent() != null) {
 				Continente continente = new Continente();
 				continente.setId(countryInfo.getContinent());
 				pais.setContinente(continente);
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("continente");
+				log.setSubject("No se pudo cargar el atributo 'Continente' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
 			}
 
-			pais.setId(countryInfo.getiSO());
-			pais.setIso3166Alpha3(countryInfo.getiSO3());
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getiSO() != null) {
+				pais.setId(countryInfo.getiSO());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("iso");
+				log.setSubject("No se pudo cargar el atributo 'ISO' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getiSO3() != null) {
+				pais.setIso3166Alpha3(countryInfo.getiSO3());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("iso3166Alpha3");
+				log.setSubject("No se pudo cargar el atributo 'ISO 3166 Alpha 3' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
 			if (countryInfo.getiSONumeric() != null) {
-				pais.setIso3166Numeric(Integer.valueOf(countryInfo.getiSONumeric()));
+
+				try {
+					pais.setIso3166Numeric(Integer.valueOf(countryInfo.getiSONumeric()));
+				} catch (Exception e) {
+					Log log = new Log();
+					log.setType(Log.TYPE_ERROR);
+					log.setId(pais.getId());
+					log.setClassName(pais.getClass().getSimpleName());
+					log.addAtt("iso3166Numeric");
+					log.setSubject("No se pudo cargar el atributo 'ISO 3166 Numeric' para el país " + pais.getId());
+					log.setMsg("El atributo no es numérico en countryInfo. " + countryInfo);
+
+					logs.add(log);
+				}
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("iso3166Numeric");
+				log.setSubject("No se pudo cargar el atributo 'ISO 3166 Numeric' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
 			}
-			pais.setFips(countryInfo.getFips());
-			pais.setEquivalentFipsCode(countryInfo.getEquivalentFipsCode());
-			pais.setNombre(countryInfo.getCountry());
 
-			pais.setCapital(countryInfo.getCapital());
-			pais.setPrefijoTelefónico(countryInfo.getPhone());
-			pais.setFormatoCodigoPostal(countryInfo.getPostalCodeFormat());
-			pais.setExpresionRegularCodigoPostal(countryInfo.getPostalCodeRegex());
+			// --------------------------------------------------------------------------
 
-			if (countryInfo.getContinent() != null) {
+			if (countryInfo.getFips() != null) {
+				pais.setFips(countryInfo.getFips());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("fips");
+				log.setSubject("No se pudo cargar el atributo 'Fips' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getFips() != null) {
+				pais.setEquivalentFipsCode(countryInfo.getEquivalentFipsCode());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("equivalentFipsCode");
+				log.setSubject("No se pudo cargar el atributo 'EquivalentFipsCode' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getCountry() != null) {
+				pais.setNombre(countryInfo.getCountry());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("nombre");
+				log.setSubject("No se pudo cargar el atributo 'Nombre' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getCapital() != null) {
+				pais.setCapital(countryInfo.getCapital());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("capital");
+				log.setSubject("No se pudo cargar el atributo 'Capital' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getPhone() != null) {
+				pais.setPrefijoTelefónico(countryInfo.getPhone());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("prefijoTelefónico");
+				log.setSubject("No se pudo cargar el atributo 'Prefijo Telefónico' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getPostalCodeFormat() != null) {
+				pais.setFormatoCodigoPostal(countryInfo.getPostalCodeFormat());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("formatoCodigoPostal");
+				log.setSubject("No se pudo cargar el atributo 'Formato Codigo Postal' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getPostalCodeRegex() != null) {
+				pais.setExpresionRegularCodigoPostal(countryInfo.getPostalCodeRegex());
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("expresionRegularCodigoPostal");
+				log.setSubject(
+						"No se pudo cargar el atributo 'Expresion Regular Codigo Postal' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
+
+			if (countryInfo.getCurrencyCode() != null) {
 				Moneda moneda = new Moneda();
 				moneda.setId(countryInfo.getCurrencyCode());
 				pais.setMoneda(moneda);
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("moneda");
+				log.setSubject("No se pudo cargar el atributo 'Moneda' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
+
+				logs.add(log);
 			}
 
-			if (httpUtil.ifExists(geoNames.getUrlMapa(pais.getId()))) {
+			// --------------------------------------------------------------------------
 
-				pais.setUrlMapa(geoNames.getUrlMapa(pais.getId()));
+			if (countryInfo.getGeonameid() != null) {
 
-				String fileName = httpUtil.download(pais.getUrlMapa(),
-						pathPais + File.separatorChar + pais.getId() + "_mapa");
-				pais.setUrlLocalMapa(fileName);
+				try {
+					pais.setGeonameId(Long.valueOf(countryInfo.getGeonameid()));
+				} catch (Exception e) {
+					Log log = new Log();
+					log.setType(Log.TYPE_ERROR);
+					log.setId(pais.getId());
+					log.setClassName(pais.getClass().getSimpleName());
+					log.addAtt("geonameId");
+					log.setSubject("No se pudo cargar el atributo 'Geoname Id' para el país " + pais.getId());
+					log.setMsg("El atributo no es numérico en countryInfo. " + countryInfo);
 
-			} else if (httpUtil.ifExists(geoNames.getUrlMapa(pais.getIso3166Alpha3()))) {
+					logs.add(log);
+				}
 
-				pais.setUrlMapa(geoNames.getUrlMapa(pais.getIso3166Alpha3()));
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("geonameId");
+				log.setSubject("No se pudo cargar el atributo 'Geoname Id' para el país " + pais.getId());
+				log.setMsg("El atributo es nulo en countryInfo. " + countryInfo);
 
-				String fileName = httpUtil.download(pais.getUrlMapa(),
-						pathPais + File.separatorChar + pais.getIso3166Alpha3() + "_mapa");
-				pais.setUrlLocalMapa(fileName);
-			} else if (httpUtil.ifExists(geoNames.getUrlMapa(pais.getFips()))) {
-				pais.setUrlMapa(geoNames.getUrlMapa(pais.getFips()));
-
-				String fileName = httpUtil.download(pais.getUrlMapa(),
-						pathPais + File.separatorChar + pais.getFips() + "_mapa");
-				pais.setUrlLocalMapa(fileName);
+				logs.add(log);
 			}
+
+			// --------------------------------------------------------------------------
 
 			if (httpUtil.ifExists(geoNames.getUrlGeoNames(pais.getId(), pais.getNombre()))) {
 
@@ -161,8 +481,39 @@ public class PopulateGeo {
 				pais.setUrlGeoNames(geoNames.getUrlGeoNames(pais.getFips(), pais.getNombre()));
 
 			} else {
-				throw new RuntimeException("No se pudo cargar el atributo 'URL GeoNames' para el país " + pais.getId());
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("urlGeoNames");
+				log.setSubject("No se pudo cargar el atributo 'URL Geo Names' para el país " + pais.getId());
+				log.setMsg("URLs: " + geoNames.getUrlGeoNames(pais.getId(), pais.getNombre()) + ", "
+						+ geoNames.getUrlGeoNames(pais.getIso3166Alpha3(), pais.getNombre()) + ", "
+						+ geoNames.getUrlGeoNames(pais.getFips(), pais.getNombre()));
+
+				logs.add(log);
 			}
+
+			// --------------------------------------------------------------------------
+
+			if (httpUtil.ifExists(geoNames.getUrlGeoNamesDivisionPolitica(pais.getId(), pais.getNombre()))) {
+
+				pais.setUrlWikipedia(geoNames.getUrlGeoNamesDivisionPolitica(pais.getId(), pais.getNombre()));
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_ERROR);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("urlGeoNamesDivisionPolitica");
+				log.setSubject(
+						"No se pudo cargar el atributo 'URL GeoNames Division Politica' para el país " + pais.getId());
+				log.setMsg("URLs: " + geoNames.getUrlGeoNamesDivisionPolitica(pais.getId(), pais.getNombre()));
+
+				logs.add(log);
+			}
+
+			// --------------------------------------------------------------------------
 
 			if (httpUtil.ifExists(geoNames.getUrlMapa(pais.getId()))) {
 
@@ -205,10 +556,12 @@ public class PopulateGeo {
 				log.setMsg("URLs: " + geoNames.getUrlMapa(pais.getId()) + ", "
 						+ geoNames.getUrlMapa(pais.getIso3166Alpha3()) + ", " + geoNames.getUrlMapa(pais.getFips())
 						+ ", " + geoNames.getUrlMapa(pais.getEquivalentFipsCode()));
-				
+
 				logs.add(log);
 
 			}
+
+			// --------------------------------------------------------------------------
 
 			if (httpUtil.ifExists(geoNames.getUrlBanderaA(pais.getId()))) {
 
@@ -235,9 +588,43 @@ public class PopulateGeo {
 				pais.setUrlLocalBanderaA(fileName);
 
 			} else {
-				throw new RuntimeException(
-						"No se pudo cargar el atributo 'URL Bandera A' para el país " + pais.getId());
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("urlBanderaA");
+				log.addAtt("urlLocalBanderaA");
+				log.setSubject("No se pudo cargar el atributo 'URL Bandera A' para el país " + pais.getId());
+				log.setMsg("URLs: " + geoNames.getUrlBanderaA(pais.getId()) + ", "
+						+ geoNames.getUrlBanderaA(pais.getIso3166Alpha3()) + ", "
+						+ geoNames.getUrlBanderaA(pais.getFips()));
+
+				logs.add(log);
 			}
+
+			// --------------------------------------------------------------------------
+
+			if (httpUtil.ifExists(pais.getUrlGeoNames())
+					&& httpUtil.ifExists(geoNames.getUrlWikipediaPais(pais.getUrlGeoNames()))) {
+
+				pais.setUrlWikipedia(geoNames.getUrlWikipediaPais(pais.getUrlGeoNames()));
+
+			} else {
+				Log log = new Log();
+				log.setType(Log.TYPE_WARNING);
+				log.setId(pais.getId());
+				log.setClassName(pais.getClass().getSimpleName());
+				log.addAtt("urlWikipedia");
+				log.setSubject("No se pudo cargar el atributo 'URL Wikipedia' para el país " + pais.getId());
+				log.setMsg("URLs: " + geoNames.getUrlWikipediaPais(pais.getUrlGeoNames()));
+
+				logs.add(log);
+
+			}
+
+			// --------------------------------------------------------------------------
+
+			// System.out.println(pais);
 
 			paises.add(pais);
 		}

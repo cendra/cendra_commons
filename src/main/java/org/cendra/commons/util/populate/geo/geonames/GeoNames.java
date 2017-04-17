@@ -114,6 +114,7 @@ public class GeoNames {
 				countryInfo.setEquivalentFipsCode(nextLine[18]);
 
 				countrysInfos.add(countryInfo);
+
 			}
 
 		}
@@ -125,9 +126,15 @@ public class GeoNames {
 		return "http://www.geonames.org/countries/" + id + "/" + nombre.replace(" ", "-") + ".html";
 	}
 
+	public String getUrlGeoNamesDivisionPolitica(String id, String nombre) {
+
+		return "http://www.geonames.org/" + id + "/administrative-division-" + nombre.toLowerCase().replace(" ", "-")
+				+ ".html";
+	}
+
 	public String getUrlMapa(String id) {
-		
-		if("CW".equalsIgnoreCase(id)){
+
+		if ("CW".equalsIgnoreCase(id)) {
 			id = "CK";
 		}
 
@@ -140,6 +147,52 @@ public class GeoNames {
 		return "http://www.geonames.org/flags/x/" + id.toLowerCase() + ".gif";
 
 	}
+
+	public String getUrlWikipediaPais(String url) throws IOException {
+
+		String s = httpUtil.getFile(url);
+
+		if (s == null) {
+			return null;
+		}
+
+		String key = "<h3>";
+
+		if (s.contains(key) == false) {
+			return null;
+		}
+
+		s = s.split(key)[1];
+
+		key = "href";
+
+		if (s.contains(key) == false) {
+			return null;
+		}
+
+		s = s.split(key)[1];
+
+		key = "=";
+
+		if (s.contains(key) == false) {
+			return null;
+		}
+
+		s = s.split(key)[1];
+
+		key = "\"";
+
+		if (s.contains(key) == false) {
+			return null;
+		}
+
+		s = s.split(key)[1];
+
+		return s;
+
+	}
+
+	// =======================================================================================
 
 	private List<AlternateName> downloadAlternateNames(String pathHomeGeoNames, String pathAlternateNamesFile,
 			List<Long> geonameIds) throws ZipException, IOException {

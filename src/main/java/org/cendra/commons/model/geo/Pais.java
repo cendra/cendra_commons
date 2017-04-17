@@ -5,39 +5,39 @@ import java.util.List;
 
 public class Pais {
 
-	private Continente continente;
+	private Continente continente; // OK
 
-	private String id; // iso3166Alpha2
-	private String iso3166Alpha3;
-	private Integer iso3166Numeric;
-	private String fips;
-	private String equivalentFipsCode;
-	private String nombre;
+	private String id; // iso3166Alpha2 // OK
+	private String iso3166Alpha3; // OK
+	private Integer iso3166Numeric; // OK
+	private String fips; // OK
+	private String equivalentFipsCode; // OK
+	private String nombre; // OK
 	private List<String> descripcionNombres = new ArrayList<String>();
-	private String capital;
-	private String prefijoTelefónico;
-	private String formatoCodigoPostal;
-	private String expresionRegularCodigoPostal;
-	private Moneda moneda;
+	private String capital; // OK
+	private String prefijoTelefónico; // OK
+	private String formatoCodigoPostal; // OK
+	private String expresionRegularCodigoPostal; // OK
+	private Moneda moneda; // OK
 
-	private Long geonameId;
+	private Long geonameId; // OK
 
-	private String urlWikipedia;
-	private String urlWikipediaDivisionPolitica;
-	private String urlGeoNames;
+	private String urlWikipedia; // OK	
+	private String urlGeoNames; // OK
+	private String urlGeoNamesDivisionPolitica; // OK
 
 	private String urlProyeccionOrtografica;
 	private String urlLocalProyeccionOrtografica;
-	private String urlBanderaA;
-	private String urlLocalBanderaA;
-	private String urlBanderaB;
+	private String urlBanderaA; // OK
+	private String urlLocalBanderaA; // OK
+	private String urlBanderaB; 
 	private String urlLocalBanderaB;
 	private String urlEscudo;
 	private String urlLocalEscudo;
 	private String urlRegion;
 	private String urlLocalRegion;
-	private String urlMapa;
-	private String urlLocalMapa;
+	private String urlMapa; // OK
+	private String urlLocalMapa; // OK
 
 	public Continente getContinente() {
 		return continente;
@@ -159,12 +159,12 @@ public class Pais {
 		this.urlWikipedia = urlWikipedia;
 	}
 
-	public String getUrlWikipediaDivisionPolitica() {
-		return urlWikipediaDivisionPolitica;
+	public String getUrlGeoNamesDivisionPolitica() {
+		return urlGeoNamesDivisionPolitica;
 	}
 
-	public void setUrlWikipediaDivisionPolitica(String urlWikipediaDivisionPolitica) {
-		this.urlWikipediaDivisionPolitica = urlWikipediaDivisionPolitica;
+	public void setUrlGeoNamesDivisionPolitica(String urlGeoNamesDivisionPolitica) {
+		this.urlGeoNamesDivisionPolitica = urlGeoNamesDivisionPolitica;
 	}
 
 	public String getUrlGeoNames() {
@@ -270,5 +270,7 @@ public class Pais {
 	public void setUrlLocalMapa(String urlLocalMapa) {
 		this.urlLocalMapa = urlLocalMapa;
 	}
+	
+	
 
 }

@@ -5,11 +5,11 @@ public class Continente {
 	private String id;
 	private String nombre;
 
-	private Long geonameId;
-	private String urlWikipedia;
-	private String urlWikipediaDivisionPolitica;
-	private String urlWikipediaProyeccionOrtografica;
-	private String urlProyeccionOrtografica;
+	private Long geonameId; // OK
+	private String urlWikipedia; // OK
+	private String urlWikipediaDivisionPolitica; // OK
+	private String urlWikipediaProyeccionOrtografica; // OK
+	private String urlLocalProyeccionOrtografica; // OK
 
 	public String getId() {
 		return id;
@@ -59,12 +59,12 @@ public class Continente {
 		this.urlWikipediaProyeccionOrtografica = urlWikipediaProyeccionOrtografica;
 	}
 
-	public String getUrlProyeccionOrtografica() {
-		return urlProyeccionOrtografica;
+	public String getUrlLocalProyeccionOrtografica() {
+		return urlLocalProyeccionOrtografica;
 	}
 
-	public void setUrlProyeccionOrtografica(String urlProyeccionOrtografica) {
-		this.urlProyeccionOrtografica = urlProyeccionOrtografica;
+	public void setUrlLocalProyeccionOrtografica(String urlLocalProyeccionOrtografica) {
+		this.urlLocalProyeccionOrtografica = urlLocalProyeccionOrtografica;
 	}
 
 }

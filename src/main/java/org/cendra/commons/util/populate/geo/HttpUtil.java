@@ -11,8 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 public class HttpUtil {
 
@@ -54,7 +54,7 @@ public class HttpUtil {
 		URLConnection urlCon = url.openConnection();
 
 		// Sacamos por pantalla el tipo de fichero
-		System.out.println(urlCon.getContentType());
+		// System.out.println(urlCon.getContentType());
 
 		toPathFile += "." + mimeTypes2.getProperty(urlCon.getContentType());
 
@@ -97,27 +97,67 @@ public class HttpUtil {
 	}
 
 	public boolean ifExists(String path) {
+		URL url;
 		try {
-
-			URL url = new URL(path);
-			URLConnection urlc = url.openConnection();
-
-			BufferedInputStream buffer = new BufferedInputStream(urlc.getInputStream());
-
-			StringBuilder builder = new StringBuilder();
-			int byteRead;
-			while ((byteRead = buffer.read()) != -1)
-				builder.append((char) byteRead);
-
-			buffer.close();
-
-			return builder.toString().length() > 0;
-
-		} catch (MalformedURLException ex) {
-			return false;
-		} catch (IOException ex) {
+			url = new URL(path);
+		} catch (MalformedURLException e) {
 			return false;
 		}
+		URLConnection urlc;
+		try {
+			urlc = url.openConnection();
+		} catch (IOException e) {
+			return false;
+		}
+		
+		try {
+			urlc.getContentType();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		try {
+			InputStream is = urlc.getInputStream();
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	public boolean ifExists() {
+
+		String path = "http://en.wikipedia.org/wiki/Andorra";
+
+		URL url;
+		try {
+			url = new URL(path);
+		} catch (MalformedURLException e) {
+			return false;
+		}
+		URLConnection urlc;
+		try {
+			urlc = url.openConnection();
+		} catch (IOException e) {
+			return false;
+		}
+		
+		try {
+			urlc.getContentType();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		try {
+			InputStream is = urlc.getInputStream();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		
+
+		return true;
 
 	}
 
